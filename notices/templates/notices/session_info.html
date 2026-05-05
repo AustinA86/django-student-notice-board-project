@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Session Information</h2>
+    <p class="alert alert-info">
+        <!-- MODULE 4: Reading from Session -->
+        {{ request.session.last_visit }}
+    </p>
+    <a href="{% url 'notice-list' %}" class="btn btn-primary">Go back home</a>
+{% endblock %}

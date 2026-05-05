@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <h2>{{ object.title }}</h2>
+                {% if user == object.author %}
+                <div>
+                    <!-- MODULE 4: CRUD Update/Delete Links -->
+                    <a href="{% url 'notice-update' object.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'notice-delete' object.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+                {% endif %}
+            </div>
+            <p class="text-muted">Posted by {{ object.author }} on {{ object.created_at }}</p>
+            <hr>
+            <p>{{ object.content }}</p>
+            
+            <div class="mt-4">
+                <!-- MODULE 5: AJAX Like Button (Now using POST) -->
+                <button id="like-btn" data-pk="{{ object.pk }}" class="btn btn-outline-danger">
+                    ❤️ Likes: <span id="like-count">{{ object.likes }}</span>
+                </button>
+            </div>
+            
+            <a href="{% url 'notice-list' %}" class="btn btn-secondary mt-3">Back to List</a>
+        </div>
+    </div>
+
+    <script>
+    $('#like-btn').click(function(){
+        var noticeId = $(this).data('pk');
+        $.ajax({
+            url: "/like/" + noticeId + "/",
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}' // Needed for AJAX POST
+            },
+            headers: {'X-Requested-With': 'XMLHttpRequest'},
+            success: function(response) {
+                $('#like-count').text(response.likes);
+                if(response.liked) {
+                    $('#like-btn').removeClass('btn-outline-danger').addClass('btn-danger');
+                } else {
+                    $('#like-btn').removeClass('btn-danger').addClass('btn-outline-danger');
+                }
+            },
+            error: function(rs, e) {
+                alert("Please login to like this notice.");
+            }
+        });
+    });
+    </script>
+{% endblock %}

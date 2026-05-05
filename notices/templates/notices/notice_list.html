@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>All Notices</h2>
+    <div class="row">
+        {% for notice in notices %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ notice.title }}</h5>
+                        <!-- MODULE 2: Template Filters (truncatechars) -->
+                        <p class="card-text">{{ notice.content|truncatechars:50 }}</p>
+                        <a href="{% url 'notice-detail' notice.pk %}" class="btn btn-primary btn-sm">Read More</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No notices available.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
